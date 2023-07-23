@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Weather app</title>
+ <link rel="stylesheet" href="style.css">
+ <style>
+  *{
+ padding: 0;
+ margin: 0;
+ box-sizing: border-box; 
+}
+
+@font-face{
+ font-family: cooljazz;
+ src: url(/MiniProjects/Cooljazz.ttf);
+}
+
+
+body{
+ text-align: center;
+ font-family: cooljazz;
+ color: white;
+}
+
+main{
+ display: flex;
+ flex-flow: column;
+ justify-content: center;
+ min-height: 100vh;
+ background-image: linear-gradient(to bottom right, rgba(10, 10, 20, 0.7), rgba(10, 10, 20, 0.4)), url("https://e1.pxfuel.com/desktop-wallpaper/628/675/desktop-wallpaper-samsung-galaxy-s20-iphone-mods-samsung-s20.jpg");
+ background-repeat: no-repeat;
+ background-size: cover;
+}
+
+.title h2{
+ margin-top: 2em;
+}
+
+section.weather{
+ border-radius: 0.7rem;
+ padding: 1rem;
+ color: snow;
+ width: 90%;
+ margin: auto;
+ background-color: rgba(10, 10, 20, 0.8);
+ backdrop-filter: blur(10px);
+ min-height: 250px;
+ margin-top: 100px;
+}
+
+.weather input{
+ border-radius: 10px;
+ border: none;
+ height: 30px;
+ padding: 5px 10px;
+ backdrop-filter: blur(10px);
+}
+
+.input{
+ display: flex;
+ flex-flow: row nowrap;
+ justify-content: space-evenly;
+}
+
+.input button{
+ border-radius: 8px;
+ border: none;
+ width: 35px;
+ height: 31px;
+}
+
+.display{
+ color: white;
+}
+
+.weather {
+    text-align: center;
+    font-size: 2rem;
+}
+.weather h2 {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+ </style>
+</head>
+
+<body>
+
+ <main>
+  <section class="title">
+   <h2>Tenki </h2>
+   <h3>(Weather App)</h3>
+   
+  </section>
+  
+  <section class="weather">
+   
+    <article class="input">
+      <form id="form">
+       <input type="text" placeholder="location" id="search" autocomplete="off" autofocus>
+      </form>
+     
+     <!--<button type="submit" id="button">
+       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+      </svg>
+      </button>-->
+   
+    </article>
+    
+    <article class="display">
+     
+    </article>
+   
+  </section>
+  
+ </main>
+
+
+
+<script>
+ const form = document.getElementById('form')
+const search = document.getElementById('search');
+const display = document.querySelector('.display')
+
+const apiKey = '055d5e56d0b995c87a056f49281d8fdb';
+
+const url = (city)=> `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+async function getWeatherByLocation(city){
+     
+         const resp = await fetch(url(city), {
+             origin: "cros" });
+         const respData = await resp.json();
+     
+           addWeatherToPage(respData);
+          
+     }
+     
+      function addWeatherToPage(data){
+          const temp = Ktoc(data.main.temp);
+          const weather = document.createElement('div')
+          weather.classList.add('weather');
+          weather.innerHTML = `
+          <h2><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" /> ${temp}°C <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" /></h2>
+          <h4>${data.weather[0].main}</h4>
+          
+          `;
+        //   cleanup 
+          display.innerHTML= "";
+           display.appendChild(weather);
+      };
+     function Ktoc(K){
+         return Math.floor(K - 273.15);
+     }
+     form.addEventListener('submit',(e) =>{
+        e.preventDefault();
+        const city = search.value;
+        if(city){
+          getWeatherByLocation(city)
+        }
+     });
+</script>
+<!--<script type="module" src="app.js"></script>-->
+</body>
+
+</html>
